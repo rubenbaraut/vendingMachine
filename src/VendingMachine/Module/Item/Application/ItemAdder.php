@@ -15,9 +15,9 @@ class ItemAdder
         $this->repository = $repository;
     }
 
-    public function __invoke(ItemId $itemId, float $price, int $numberItems): void
+    public function __invoke(ItemId $itemId, string $name, float $price, int $numberItems): void
     {
-        $item = new Item($itemId, $price, $numberItems);
+        $item = new Item($itemId, $name, $price, $numberItems);
         $this->repository->save($item);
     }
 }

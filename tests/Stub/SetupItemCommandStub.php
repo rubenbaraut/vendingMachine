@@ -7,17 +7,18 @@ use App\VendingMachine\Shared\Item\ItemId;
 
 final class SetupItemCommandStub
 {
-    public static function create(ItemId $itemId, float $price, int $numberItems): SetupItemCommand
+    public static function create(ItemId $itemId, string $name, float $price, int $numberItems): SetupItemCommand
     {
-        return new SetupItemCommand($itemId, $price, $numberItems);
+        return new SetupItemCommand($itemId, $name, $price, $numberItems);
     }
 
     public static function random(): SetupItemCommand
     {
         $itemId = ItemIdStub::random();
+        $name = StringStub::random();
         $price = NumberStub::float(2);
         $numberItems = NumberStub::lessThan(10);
 
-        return self::create($itemId, $price, $numberItems);
+        return self::create($itemId, $name, $price, $numberItems);
     }
 }

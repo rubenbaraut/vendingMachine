@@ -9,6 +9,7 @@ use App\Tests\Stub\CoinStockStub;
 use App\Tests\Stub\CoinStub;
 use App\Tests\Stub\ItemIdStub;
 use App\Tests\Stub\ItemStub;
+use App\Tests\Stub\StringStub;
 use App\Tests\TestCase\VendingMachineTestCase;
 use App\VendingMachine\Module\Item\Application\BuyerService;
 use App\VendingMachine\Module\Item\Application\BuyItemCommandHandler;
@@ -52,7 +53,8 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = BuyItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $item = ItemStub::create($itemId, 10.0, 0);
+        $itemName = StringStub::random();
+        $item = ItemStub::create($itemId,$itemName, 10.0, 0);
 
         $this->shouldSearchItem($itemId, $item);
         $this->expectException(ItemNotFoundException::class);
@@ -64,7 +66,8 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = BuyItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $item = ItemStub::create($itemId, 1.0, 10);
+        $itemName = StringStub::random();
+        $item = ItemStub::create($itemId,$itemName, 1.0, 10);
         $coins = CoinsStub::fromValues([0.05]);
 
         $this->shouldSearchItem($itemId, $item);
@@ -78,8 +81,9 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = BuyItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $item = ItemStub::create($itemId, 1.0, 10);
-        $itemToSave = ItemStub::create($itemId, 1.0, 9);
+        $itemName = StringStub::random();
+        $item = ItemStub::create($itemId,$itemName, 1.0, 10);
+        $itemToSave = ItemStub::create($itemId,$itemName, 1.0, 9);
         $coins = CoinsStub::fromValues([1.0]);
 
         $coinStocks1 = CoinStockStub::create(10,CoinStub::create(1.0));
@@ -104,8 +108,9 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = BuyItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $item = ItemStub::create($itemId, 1.0, 10);
-        $itemToSave = ItemStub::create($itemId, 1.0, 9);
+        $itemName = StringStub::random();
+        $item = ItemStub::create($itemId,$itemName, 1.0, 10);
+        $itemToSave = ItemStub::create($itemId, $itemName,1.0, 9);
         $coins = CoinsStub::fromValues([1.0,0.25,0.25]);
 
         $coinStocks1 = CoinStockStub::create(10,CoinStub::create(1.0));
@@ -132,8 +137,9 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = BuyItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $item = ItemStub::create($itemId, 0.10, 10);
-        $itemToSave = ItemStub::create($itemId, 0.10, 9);
+        $itemName = StringStub::random();
+        $item = ItemStub::create($itemId, $itemName, 0.10, 10);
+        $itemToSave = ItemStub::create($itemId,$itemName, 0.10, 9);
         $coins = CoinsStub::fromValues([0.05,0.05,0.05]);
 
         $coinStocks1 = CoinStockStub::create(10,CoinStub::create(1.0));
@@ -158,8 +164,9 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = BuyItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $item = ItemStub::create($itemId, 1.0, 10);
-        $itemToSave = ItemStub::create($itemId, 1.0, 9);
+        $itemName = StringStub::random();
+        $item = ItemStub::create($itemId, $itemName, 1.0, 10);
+        $itemToSave = ItemStub::create($itemId, $itemName,1.0, 9);
         $coins = CoinsStub::fromValues([0.05,0.05,1.0]);
 
         $coinStocks1 = CoinStockStub::create(10,CoinStub::create(1.0));

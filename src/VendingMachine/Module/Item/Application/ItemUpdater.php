@@ -15,8 +15,9 @@ class ItemUpdater
         $this->repository = $repository;
     }
 
-    public function __invoke(Item $item, float $price, int $numberItems): void
+    public function __invoke(Item $item,string $name, float $price, int $numberItems): void
     {
+        $item->changeName($name);
         $item->changePrice($price);
         $item->changeStock($numberItems);
         $this->repository->save($item);

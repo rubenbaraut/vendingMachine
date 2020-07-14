@@ -6,6 +6,7 @@ use App\Tests\Stub\ItemIdStub;
 use App\Tests\Stub\ItemStub;
 use App\Tests\Stub\NumberStub;
 use App\Tests\Stub\SetupItemCommandStub;
+use App\Tests\Stub\StringStub;
 use App\Tests\TestCase\VendingMachineTestCase;
 use App\VendingMachine\Module\Item\Application\ItemAdder;
 use App\VendingMachine\Module\Item\Application\ItemSearcher;
@@ -30,7 +31,8 @@ class SetupItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = SetupItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $newItem = ItemStub::create($itemId, $command->price(), $command->numberItems());
+        $itemName = StringStub::create($command->name());
+        $newItem = ItemStub::create($itemId,$itemName, $command->price(), $command->numberItems());
         $this->shouldSearchItem($itemId);
         $this->shouldSaveItem($newItem);
         ($this->handler)($command);
@@ -41,7 +43,8 @@ class SetupItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = SetupItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $existingItem = ItemStub::create($itemId, NumberStub::float(2), NumberStub::lessThan(5));
+        $itemName = StringStub::random();
+        $existingItem = ItemStub::create($itemId, $itemName, NumberStub::float(2), NumberStub::lessThan(5));
         $this->shouldSearchItem($itemId, $existingItem);
         $this->shouldSaveItem($existingItem);
         ($this->handler)($command);

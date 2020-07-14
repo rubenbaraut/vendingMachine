@@ -20,11 +20,12 @@ class SetupItemCommandHandler
     public function __invoke(SetupItemCommand $command): void
     {
         $itemId = new ItemId($command->itemId());
+        $itemName = new ItemId($command->name());
         $item = ($this->searcher)($itemId);
         if (null == $item) {
-            ($this->adder)($itemId, $command->price(), $command->numberItems());
+            ($this->adder)($itemId, $itemName, $command->price(), $command->numberItems());
         } else {
-            ($this->updater)($item, $command->price(), $command->numberItems());
+            ($this->updater)($item, $itemName, $command->price(), $command->numberItems());
         }
 
         //falta  try catch al controller ItemNotFound
