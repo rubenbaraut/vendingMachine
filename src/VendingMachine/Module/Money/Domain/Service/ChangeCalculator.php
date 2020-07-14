@@ -29,12 +29,13 @@ class ChangeCalculator
                 $filled = false;
                 $coinStockValue = $coinStock->coin()->value() * 100;
                 if ($import >= $coinStockValue && $coinStock->quantity() > 0) {
-                    $import = $import - $coinStockValue;
+                    $import = (int) $import - (int) $coinStockValue;
                     $coinStock->decrement();
                     $change[] = $coinStockValue / 100;
                     $filled = true;
                     break;
                 }
+
                 if (!$filled && $counter === $coinsStocks->count()) {
                     throw new NoCoinStockException();
                 }

@@ -105,4 +105,11 @@ abstract class VendingMachineTestCase extends TestCase
             }))
             ->andReturn($coinStock);
     }
+
+    public function shouldCalculateTotalCoins(float $total)
+    {
+        $this->coinRepository()
+            ->shouldReceive('total')
+            ->andReturn($total);
+    }
 }

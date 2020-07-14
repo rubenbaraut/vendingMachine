@@ -7,12 +7,10 @@ use App\VendingMachine\Shared\Item\ItemId;
 class BuyItemCommandHandler
 {
     private $buyer;
-    private $itemSearcher;
 
-    public function __construct(BuyerService $buyer, ItemSearcher $itemSearcher)
+    public function __construct(BuyerService $buyer)
     {
         $this->buyer = $buyer;
-        $this->itemSearcher = $itemSearcher;
     }
 
     public function __invoke(BuyItemCommand $command): BuyItemResponse
