@@ -6,7 +6,6 @@ use App\Tests\Stub\CoinsStocksStub;
 use App\Tests\Stub\CoinStockStub;
 use App\Tests\Stub\CoinStub;
 use App\Tests\TestCase\VendingMachineTestCase;
-use App\VendingMachine\Module\Money\Domain\Exception\NoCoinException;
 use App\VendingMachine\Module\Money\Domain\Exception\NoCoinStockException;
 use App\VendingMachine\Module\Money\Domain\Service\ChangeCalculator;
 

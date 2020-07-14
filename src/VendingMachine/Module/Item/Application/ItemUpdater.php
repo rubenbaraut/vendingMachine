@@ -2,7 +2,6 @@
 
 namespace App\VendingMachine\Module\Item\Application;
 
-
 use App\VendingMachine\Module\Item\Domain\Item;
 use App\VendingMachine\Module\Item\Domain\ItemRepository;
 
