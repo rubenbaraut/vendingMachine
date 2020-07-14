@@ -27,10 +27,20 @@ class Coins extends Collection
     public function toArray(): array
     {
         $data = [];
-        foreach ($this->items as $key=>$coin) {
+        foreach ($this->items as $key => $coin) {
             $data[] = $coin->value();
         }
 
         return $data;
+    }
+
+    public function total(): float
+    {
+        $total = 0;
+        foreach ($this->items as $key => $coin) {
+            $total += $coin->value();
+        }
+
+        return $total;
     }
 }

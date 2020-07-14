@@ -27,4 +27,11 @@ class CoinStock
     {
         $this->quantity = $this->quantity + 1;
     }
+
+    public function decrement()
+    {
+        if ($this->quantity > 0) {
+            $this->quantity = $this->quantity - 1;
+        }
+    }
 }

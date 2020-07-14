@@ -6,7 +6,7 @@ interface CoinRepository
 {
     public function save(Coin $coin): void;
 
-    public function totalCoins(): ?Coins;
+    public function total(): float;
 
     public function removeAll(): ?Coins;
 }

@@ -8,6 +8,7 @@ use App\VendingMachine\Module\Item\Domain\ItemRepository;
 use App\VendingMachine\Module\Money\Domain\Coin;
 use App\VendingMachine\Module\Money\Domain\CoinRepository;
 use App\VendingMachine\Module\Money\Domain\Coins;
+use App\VendingMachine\Module\Money\Domain\CoinsStocks;
 use App\VendingMachine\Module\Money\Domain\CoinStock;
 use App\VendingMachine\Module\Money\Domain\CoinStockRepository;
 use App\VendingMachine\Shared\Item\ItemId;
@@ -59,6 +60,13 @@ abstract class VendingMachineTestCase extends TestCase
                 return $coinStock->quantity() === $argument->quantity() && $coinStock->coin()->value() === $argument->coin()->value();
             }))
             ->andReturnNull();
+    }
+
+    public function shouldFindAllCoinStockOrderedByValue(?CoinsStocks $coinStock = null)
+    {
+        $this->coinStockRepository()
+            ->shouldReceive('findAllOrderedByValue')
+            ->andReturn($coinStock);
     }
 
     public function shouldSaveItem(Item $item): void

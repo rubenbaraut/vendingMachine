@@ -55,4 +55,9 @@ class Item
     {
         $this->changeStock($this->stock - 1);
     }
+
+    public function buy(): void
+    {
+        $this->decreaseStock();
+    }
 }

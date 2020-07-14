@@ -2,8 +2,6 @@
 
 namespace App\VendingMachine\Module\Money\Application;
 
-
-
 use App\VendingMachine\Module\Money\Domain\Coins;
 
 class InsertCoinsCommandHandler
