@@ -18,7 +18,7 @@ class ChangeCalculator
 
     public function __invoke(float $import): Coins
     {
-        $import = $import*100;
+        $import = $import * 100;
         $coinsStocks = $this->coinStockRepository->findAllOrderedByValue();
         $this->guard($coinsStocks);
         $change = [];
@@ -26,14 +26,16 @@ class ChangeCalculator
 
         while ($import > 0) {
             foreach ($coinsStocks->items() as $coinStock) {
-                $coinStockValue = $coinStock->coin()->value()*100;
+                $filled = false;
+                $coinStockValue = $coinStock->coin()->value() * 100;
                 if ($import >= $coinStockValue && $coinStock->quantity() > 0) {
                     $import = $import - $coinStockValue;
                     $coinStock->decrement();
-                    $change[] = $coinStockValue/100;
+                    $change[] = $coinStockValue / 100;
+                    $filled = true;
                     break;
                 }
-                if($import < $coinStockValue && $counter === $coinsStocks->count()) {
+                if (!$filled && $counter === $coinsStocks->count()) {
                     throw new NoCoinStockException();
                 }
             }
