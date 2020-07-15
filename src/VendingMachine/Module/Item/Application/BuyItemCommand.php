@@ -4,15 +4,15 @@ namespace App\VendingMachine\Module\Item\Application;
 
 class BuyItemCommand
 {
-    private $itemId;
+    private $itemName;
 
-    public function __construct(string $itemId)
+    public function __construct(string $itemName)
     {
-        $this->itemId = $itemId;
+        $this->itemName = $itemName;
     }
 
-    public function itemId(): string
+    public function itemName(): string
     {
-        return $this->itemId;
+        return $this->itemName;
     }
 }

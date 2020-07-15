@@ -2,38 +2,30 @@
 
 namespace App\VendingMachine\Module\Item\Application;
 
-use App\VendingMachine\Module\Item\Domain\Exception\ItemNotFoundException;
 use App\VendingMachine\Module\Item\Domain\Item;
 use App\VendingMachine\Module\Item\Domain\ItemRepository;
 use App\VendingMachine\Module\Money\Domain\CoinRepository;
 use App\VendingMachine\Module\Money\Domain\Exception\NotEnoughMoneyException;
 use App\VendingMachine\Module\Money\Domain\Service\ChangeCalculator;
-use App\VendingMachine\Shared\Item\ItemId;
 
 class BuyerService
 {
-    private $searcher;
     private $coinRepository;
     private $itemRepository;
     private $changeCalculator;
 
     public function __construct(
-        ItemSearcher $searcher,
         CoinRepository $coinRepository,
         ItemRepository $itemRepository,
         ChangeCalculator $changeCalculator
     ) {
-        $this->searcher = $searcher;
         $this->coinRepository = $coinRepository;
         $this->itemRepository = $itemRepository;
         $this->changeCalculator = $changeCalculator;
     }
 
-    public function __invoke(ItemId $itemId): BuyItemResponse
+    public function __invoke(Item $item): BuyItemResponse
     {
-        $item = ($this->searcher)($itemId);
-        $this->guarditem($item, $itemId);
-
         $amountAvailable = $this->coinRepository->total();
         $this->guardMoney($item, $amountAvailable);
 
@@ -53,13 +45,6 @@ class BuyerService
         }
 
         return true;
-    }
-
-    private function guardItem(?Item $item, $itemId): void
-    {
-        if (null === $item || 0 === $item->stock()) {
-            throw new ItemNotFoundException($itemId);
-        }
     }
 
     private function guardMoney(?Item $item, float $amountAvailable): void

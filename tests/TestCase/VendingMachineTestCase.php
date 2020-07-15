@@ -12,6 +12,7 @@ use App\VendingMachine\Module\Money\Domain\CoinsStocks;
 use App\VendingMachine\Module\Money\Domain\CoinStock;
 use App\VendingMachine\Module\Money\Domain\CoinStockRepository;
 use App\VendingMachine\Shared\Item\ItemId;
+use App\VendingMachine\Shared\Item\ItemName;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
@@ -92,6 +93,16 @@ abstract class VendingMachineTestCase extends TestCase
             ->shouldReceive('search')
             ->with(Mockery::on(function ($argument) use ($itemId) {
                 return $itemId->equals($argument);
+            }))
+            ->andReturn($item);
+    }
+
+    public function shouldSearchItemByName(ItemName $itemName, ?Item $item = null)
+    {
+        $this->itemRepository()
+            ->shouldReceive('searchByName')
+            ->with(Mockery::on(function ($argument) use ($itemName) {
+                return $itemName->equals($argument);
             }))
             ->andReturn($item);
     }

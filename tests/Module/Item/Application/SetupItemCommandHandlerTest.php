@@ -3,13 +3,12 @@
 namespace App\Tests;
 
 use App\Tests\Stub\ItemIdStub;
+use App\Tests\Stub\ItemNameStub;
 use App\Tests\Stub\ItemStub;
 use App\Tests\Stub\NumberStub;
 use App\Tests\Stub\SetupItemCommandStub;
-use App\Tests\Stub\StringStub;
 use App\Tests\TestCase\VendingMachineTestCase;
 use App\VendingMachine\Module\Item\Application\ItemAdder;
-use App\VendingMachine\Module\Item\Application\ItemSearcher;
 use App\VendingMachine\Module\Item\Application\ItemUpdater;
 use App\VendingMachine\Module\Item\Application\SetupItemCommandHandler;
 
@@ -22,8 +21,7 @@ class SetupItemCommandHandlerTest extends VendingMachineTestCase
     {
         $adder = new ItemAdder($this->itemRepository());
         $updater = new ItemUpdater($this->itemRepository());
-        $searcher = new ItemSearcher($this->itemRepository());
-        $this->handler = new SetupItemCommandHandler($adder, $searcher, $updater);
+        $this->handler = new SetupItemCommandHandler($adder, $this->itemRepository(), $updater);
     }
 
     /** @test */
@@ -31,7 +29,7 @@ class SetupItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = SetupItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $itemName = StringStub::create($command->name());
+        $itemName = ItemNameStub::create($command->name());
         $newItem = ItemStub::create($itemId,$itemName, $command->price(), $command->numberItems());
         $this->shouldSearchItem($itemId);
         $this->shouldSaveItem($newItem);
@@ -43,7 +41,7 @@ class SetupItemCommandHandlerTest extends VendingMachineTestCase
     {
         $command = SetupItemCommandStub::random();
         $itemId = ItemIdStub::create($command->itemId());
-        $itemName = StringStub::random();
+        $itemName = ItemNameStub::create($command->name());
         $existingItem = ItemStub::create($itemId, $itemName, NumberStub::float(2), NumberStub::lessThan(5));
         $this->shouldSearchItem($itemId, $existingItem);
         $this->shouldSaveItem($existingItem);

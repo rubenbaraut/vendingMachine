@@ -4,18 +4,16 @@ namespace App\Tests\Stub;
 
 use App\VendingMachine\Module\Item\Application\BuyItemCommand;
 
-use App\VendingMachine\Shared\Item\ItemId;
-
 final class BuyItemCommandStub
 {
-    public static function create(ItemId $itemId): BuyItemCommand
+    public static function create(string $itemName): BuyItemCommand
     {
-        return new BuyItemCommand($itemId);
+        return new BuyItemCommand($itemName);
     }
 
     public static function random(): BuyItemCommand
     {
-        $itemId = ItemIdStub::random();
-        return self::create($itemId);
+        $itemName = StringStub::random();
+        return self::create($itemName);
     }
 }

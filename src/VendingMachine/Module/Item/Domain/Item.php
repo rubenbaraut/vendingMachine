@@ -3,6 +3,7 @@
 namespace App\VendingMachine\Module\Item\Domain;
 
 use App\VendingMachine\Shared\Item\ItemId;
+use App\VendingMachine\Shared\Item\ItemName;
 
 class Item
 {
@@ -11,7 +12,7 @@ class Item
     private $stock;
     private $price;
 
-    public function __construct(ItemId $itemId, string $name, float $price, int $stock)
+    public function __construct(ItemId $itemId, ItemName $name, float $price, int $stock)
     {
         $this->itemId = $itemId;
         $this->name = $name;
@@ -34,7 +35,7 @@ class Item
         return $this->stock;
     }
 
-    public function name(): string
+    public function name(): ItemName
     {
         return $this->name;
     }
@@ -53,16 +54,16 @@ class Item
         }
     }
 
-    public function changeName(string $name): void
+    public function changeName(ItemName $name): void
     {
-        if ($this->name !== $name) {
+        if ($this->name->value() !== $name->value()) {
             $this->name = $name;
         }
     }
 
     public function equals(Item $item): bool
     {
-        return $this->itemId->value() === $item->itemId->value() && $this->price === $item->price() && $this->stock === $item->stock() && $this->name === $item->name();
+        return $this->itemId->value() === $item->itemId->value() && $this->price === $item->price() && $this->stock === $item->stock() && $this->name->value() === $item->name()->value();
     }
 
     public function decreaseStock(): void

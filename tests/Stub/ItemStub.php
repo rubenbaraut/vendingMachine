@@ -15,7 +15,7 @@ final class ItemStub
     {
         return self::create(
             ItemIdStub::random(),
-            StringStub::random(),
+            ItemNameStub::random(),
             NumberStub::float(2),
             NumberStub::lessThan(10)
         );

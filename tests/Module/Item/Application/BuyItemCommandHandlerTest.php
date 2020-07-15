@@ -8,12 +8,11 @@ use App\Tests\Stub\CoinsStub;
 use App\Tests\Stub\CoinStockStub;
 use App\Tests\Stub\CoinStub;
 use App\Tests\Stub\ItemIdStub;
+use App\Tests\Stub\ItemNameStub;
 use App\Tests\Stub\ItemStub;
-use App\Tests\Stub\StringStub;
 use App\Tests\TestCase\VendingMachineTestCase;
 use App\VendingMachine\Module\Item\Application\BuyerService;
 use App\VendingMachine\Module\Item\Application\BuyItemCommandHandler;
-use App\VendingMachine\Module\Item\Application\ItemSearcher;
 use App\VendingMachine\Module\Item\Domain\Exception\ItemNotFoundException;
 use App\VendingMachine\Module\Money\Domain\Exception\NotEnoughMoneyException;
 use App\VendingMachine\Module\Money\Domain\Service\ChangeCalculator;
@@ -25,25 +24,23 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
 
     public function setUp()
     {
-        $itemSearcher = new ItemSearcher($this->itemRepository());
         $changeCalculator = new ChangeCalculator($this->coinStockRepository());
         $buyer = new BuyerService(
-            $itemSearcher,
             $this->coinRepository(),
             $this->itemRepository(),
             $changeCalculator
         );
 
-        $this->handler = new BuyItemCommandHandler($buyer);
+        $this->handler = new BuyItemCommandHandler($buyer, $this->itemRepository());
     }
 
     /** @test */
     public function should_not_buy_item_if_item_not_exist()
     {
         $command = BuyItemCommandStub::random();
-        $itemId = ItemIdStub::create($command->itemId());
+        $itemName = ItemNameStub::create($command->itemName());
 
-        $this->shouldSearchItem($itemId);
+        $this->shouldSearchItemByName($itemName);
         $this->expectException(ItemNotFoundException::class);
         ($this->handler)($command);
     }
@@ -52,11 +49,11 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     public function should_not_buy_item_if_item_not_have_stock()
     {
         $command = BuyItemCommandStub::random();
-        $itemId = ItemIdStub::create($command->itemId());
-        $itemName = StringStub::random();
+        $itemId = ItemIdStub::random();
+        $itemName = ItemNameStub::create($command->itemName());
         $item = ItemStub::create($itemId,$itemName, 10.0, 0);
 
-        $this->shouldSearchItem($itemId, $item);
+        $this->shouldSearchItemByName($itemName, $item);
         $this->expectException(ItemNotFoundException::class);
         ($this->handler)($command);
     }
@@ -65,12 +62,12 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     public function should_not_buy_item_if_coins_added_not_enough_to_buy()
     {
         $command = BuyItemCommandStub::random();
-        $itemId = ItemIdStub::create($command->itemId());
-        $itemName = StringStub::random();
+        $itemId = ItemIdStub::random();
+        $itemName = ItemNameStub::create($command->itemName());
         $item = ItemStub::create($itemId,$itemName, 1.0, 10);
         $coins = CoinsStub::fromValues([0.05]);
 
-        $this->shouldSearchItem($itemId, $item);
+        $this->shouldSearchItemByName($itemName, $item);
         $this->shouldCalculateTotalCoins($coins->total());
         $this->expectException(NotEnoughMoneyException::class);
         ($this->handler)($command);
@@ -80,8 +77,8 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     public function should_buy_item_if_enough_money_and_enough_stock_with_exact_price()
     {
         $command = BuyItemCommandStub::random();
-        $itemId = ItemIdStub::create($command->itemId());
-        $itemName = StringStub::random();
+        $itemId = ItemIdStub::random();
+        $itemName = ItemNameStub::create($command->itemName());
         $item = ItemStub::create($itemId,$itemName, 1.0, 10);
         $itemToSave = ItemStub::create($itemId,$itemName, 1.0, 9);
         $coins = CoinsStub::fromValues([1.0]);
@@ -93,7 +90,7 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
 
         $coinsStocksOrdered = CoinsStocksStub::create($coinStocks1,$coinStocks2,$coinStocks3,$coinStocks4);
 
-        $this->shouldSearchItem($itemId, $item);
+        $this->shouldSearchItemByName($itemName, $item);
         $this->shouldCalculateTotalCoins($coins->total());
         $this->shouldSaveItem($itemToSave);
         $this->shouldFindAllCoinStockOrderedByValue($coinsStocksOrdered);
@@ -107,8 +104,8 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     public function should_buy_item_if_enough_money_and_enough_stock_returning_change()
     {
         $command = BuyItemCommandStub::random();
-        $itemId = ItemIdStub::create($command->itemId());
-        $itemName = StringStub::random();
+        $itemId = ItemIdStub::random();
+        $itemName = ItemNameStub::create($command->itemName());
         $item = ItemStub::create($itemId,$itemName, 1.0, 10);
         $itemToSave = ItemStub::create($itemId, $itemName,1.0, 9);
         $coins = CoinsStub::fromValues([1.0,0.25,0.25]);
@@ -119,7 +116,7 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
         $coinStocks4 = CoinStockStub::create(10,CoinStub::create(0.05));
         $coinsStocksOrdered = CoinsStocksStub::create($coinStocks1,$coinStocks2,$coinStocks3,$coinStocks4);
 
-        $this->shouldSearchItem($itemId, $item);
+        $this->shouldSearchItemByName($itemName, $item);
         $this->shouldCalculateTotalCoins($coins->total());
         $this->shouldSaveItem($itemToSave);
         $this->shouldFindAllCoinStockOrderedByValue($coinsStocksOrdered);
@@ -136,8 +133,8 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     public function should_buy_item_with_005cents_if_enough_money_and_enough_stock_returning_change()
     {
         $command = BuyItemCommandStub::random();
-        $itemId = ItemIdStub::create($command->itemId());
-        $itemName = StringStub::random();
+        $itemId = ItemIdStub::random();
+        $itemName = ItemNameStub::create($command->itemName());
         $item = ItemStub::create($itemId, $itemName, 0.10, 10);
         $itemToSave = ItemStub::create($itemId,$itemName, 0.10, 9);
         $coins = CoinsStub::fromValues([0.05,0.05,0.05]);
@@ -148,7 +145,7 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
         $coinStocks4 = CoinStockStub::create(10,CoinStub::create(0.05));
         $coinsStocksOrdered = CoinsStocksStub::create($coinStocks1,$coinStocks2,$coinStocks3,$coinStocks4);
 
-        $this->shouldSearchItem($itemId, $item);
+        $this->shouldSearchItemByName($itemName, $item);
         $this->shouldCalculateTotalCoins($coins->total());
         $this->shouldSaveItem($itemToSave);
         $this->shouldFindAllCoinStockOrderedByValue($coinsStocksOrdered);
@@ -163,8 +160,8 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
     public function should_buy_item_with_different_coins_if_enough_money_and_enough_stock_returning_change()
     {
         $command = BuyItemCommandStub::random();
-        $itemId = ItemIdStub::create($command->itemId());
-        $itemName = StringStub::random();
+        $itemId = ItemIdStub::random();
+        $itemName = ItemNameStub::create($command->itemName());
         $item = ItemStub::create($itemId, $itemName, 1.0, 10);
         $itemToSave = ItemStub::create($itemId, $itemName,1.0, 9);
         $coins = CoinsStub::fromValues([0.05,0.05,1.0]);
@@ -175,7 +172,7 @@ class BuyItemCommandHandlerTest extends VendingMachineTestCase
         $coinStocks4 = CoinStockStub::create(10,CoinStub::create(0.05));
         $coinsStocksOrdered = CoinsStocksStub::create($coinStocks1,$coinStocks2,$coinStocks3,$coinStocks4);
 
-        $this->shouldSearchItem($itemId, $item);
+        $this->shouldSearchItemByName($itemName, $item);
         $this->shouldCalculateTotalCoins($coins->total());
         $this->shouldSaveItem($itemToSave);
         $this->shouldFindAllCoinStockOrderedByValue($coinsStocksOrdered);
