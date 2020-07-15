@@ -13,7 +13,7 @@ class InsertCoinsCommandHandler
         $this->coinsAdder = $coinsAdder;
     }
 
-    public function __invoke(InsertCoinsCommand $command)
+    public function __invoke(InsertCoinsCommand $command): void
     {
         $coins = Coins::fromArray($command->coins());
         ($this->coinsAdder)($coins);
