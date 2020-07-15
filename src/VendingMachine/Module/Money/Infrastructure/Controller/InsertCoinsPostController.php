@@ -2,9 +2,9 @@
 
 namespace App\VendingMachine\Module\Money\Infrastructure\Controller;
 
-
 use App\VendingMachine\Module\Money\Application\InsertCoinsCommand;
 use App\VendingMachine\Module\Money\Application\InsertCoinsCommandHandler;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -12,10 +12,12 @@ use Throwable;
 class InsertCoinsPostController
 {
     private $handler;
+    private $logger;
 
-    public function __construct(InsertCoinsCommandHandler $handler)
+    public function __construct(InsertCoinsCommandHandler $handler, LoggerInterface $logger)
     {
         $this->handler = $handler;
+        $this->logger = $logger;
     }
 
     public function __invoke(Request $request)
@@ -29,7 +31,7 @@ class InsertCoinsPostController
             return new Response('Ok', 200);
 
         } catch (Throwable $ex) {
-            die;
+            $this->logger->error(sprintf('%s %s', $ex->getMessage(), $ex->getTraceAsString()));
         }
     }
 }

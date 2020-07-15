@@ -55,14 +55,28 @@ Example 3: Buy Water without exact change
 * Please make sure the name **Holded** are not referenced in any place in your code.
 * Commit from the very beginning and commit often. We value the possibility to review your git log.
 
-
-
-
 ## HOW TO INSTALL
 
-docker exec -ti php-vendingmachine bash
-composer install
+All the project is prepared to run under docker.
+In order to build the the project you need to run following intructions:
+
+* clone the repository
+* docker-compose build
+* docker-compose up -d
+* docker exec -ti php-vendingmachine bash
+* composer install
+
+Now You have the project working!
+
+In order to run the tests, run:
+
+* php bin/phpunit
+
+Note: The final implementation is not finished. All the repositories are not implemented, so you cannot persist nothing. You can only check the right functionality looking inside the tests.
+Inside the tests, all the repositories are fakes, provided with Mockery. 
+
+I've added an example of a cli command called "SetupItem" where you can see how I want to implement the final version all of the commands that are inside this repo.
+Also, I've delivered an example of controller called "InsertCoinsPostController", if the application have to be called through an API. 
+Neither of these two implementations works, they are just there to show the idea.
 
 
-## How to run tests
-php bin/phpunit
