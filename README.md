@@ -51,10 +51,9 @@ Example 3: Buy Water without exact change
 * The provided solutions needs to be uploaded into a public repository (Github, Gitlab, bitbucket) with a README.MD providing the following information.
 	* Instructions on how to run your solution
 	* Requirements
-* Please make sure the name **Holded** are not referenced in any place in your code.
 * Commit from the very beginning and commit often. We value the possibility to review your git log.
 
-## HOW TO INSTALL
+# HOW TO INSTALL
 
 All the project is prepared to run under docker.
 In order to build the the project you need to run following intructions:
